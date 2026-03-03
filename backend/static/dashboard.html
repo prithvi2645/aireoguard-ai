@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Dashboard specific overrides for 3D BG */
+        body {
+            overflow-x: hidden;
+            background: #111;
+        }
+
+        .dashboard-wrapper {
+            position: relative;
+            min-height: 100vh;
+            perspective: 1000px;
+            overflow: hidden;
+        }
+
+        .bg-img-wrapper {
+            position: absolute;
+            top: -5%;
+            left: -5%;
+            width: 110%;
+            height: 110%;
+            transition: transform 0.1s ease-out;
+            will-change: transform;
+            z-index: 0;
+        }
+
+        .bg-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .dashboard-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1;
+        }
+
+        .dashboard-container {
+            position: relative;
+            z-index: 2;
+            /* Content above overlay */
+            padding-top: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-wrapper">
+        <!-- 3D Background -->
+        <div class="bg-img-wrapper" id="jet-bg">
+            <img src="/orange_jet.png" alt="Jet Engine">
+        </div>
+        <div class="dashboard-overlay"></div>
+
+        <div class="dashboard-container">
+            <header
+                style="background: transparent; border: none; margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h2 style="color: white; margin: 0;">AeroGuard <span style="color:var(--primary-orange)">AI</span>
+                    </h2>
+                </div>
+
+                <div class="header-actions" style="display: flex; gap: 1rem; align-items: center;">
+                    <button id="demo-btn" class="btn-orange" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Auto
+                        Demo</button>
+
+                    <div class="dropdown">
+                        <button class="btn-orange" onclick="toggleDropdown()"
+                            style="background: rgba(255,255,255,0.1); padding: 0.5rem 1rem; font-size: 0.9rem;">System
+                            Details &#9662;</button>
+                        <div id="myDropdown" class="dropdown-content"
+                            style="background: #222; color: white; border-top: 2px solid #ff6600;">
+                            <h3 style="color:white; font-size: 1rem;">Model Stats</h3>
+                            <p style="color:#ccc; font-size: 0.9rem;">Accuracy: ~70%</p>
+                            <hr style="border-color: #444;">
+                            <p style="color:#ccc; font-size: 0.9rem;">RUL Thresholds: 60/30</p>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="main-grid" style="display: grid; grid-template-columns: 350px 1fr; gap: 2rem;">
+                <!-- Left Column -->
+                <div class="card">
+                    <h3 style="margin-bottom: 1.5rem; color: var(--primary-orange);">Sensor Configuration</h3>
+                    <form id="prediction-form">
+                        <div style="margin-bottom: 1rem;">
+                            <label>Fan Speed (S2)</label>
+                            <input type="number" step="0.01" name="s_2" value="642.15" required
+                                style="width: 100%; padding: 10px; border-radius: 4px;">
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <label>Core Speed (S3)</label>
+                            <input type="number" step="0.01" name="s_3" value="1590.00" required
+                                style="width: 100%; padding: 10px; border-radius: 4px;">
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <label>HPC Temp (S11)</label>
+                            <input type="number" step="0.01" name="s_11" value="47.50" required
+                                style="width: 100%; padding: 10px; border-radius: 4px;">
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <label>LPT Temp (S14)</label>
+                            <input type="number" step="0.01" name="s_14" value="8140.00" required
+                                style="width: 100%; padding: 10px; border-radius: 4px;">
+                        </div>
+
+                        <button type="submit" class="btn-orange" style="width: 100%; margin-top: 1rem;">Run
+                            Analysis</button>
+                    </form>
+                </div>
+
+                <!-- Right Column -->
+                <div class="card" style="display: flex; flex-direction: column; align-items: center;">
+                    <h3 style="margin-bottom: 1rem;">Engine Status</h3>
+
+                    <div style="position: relative; height: 250px; width: 250px;">
+                        <canvas id="healthGauge"></canvas>
+                        <div
+                            style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -20%); text-align: center;">
+                            <span id="health-text"
+                                style="font-size: 2.5rem; font-weight: bold; display: block; color: white;">--%</span>
+                        </div>
+                    </div>
+
+                    <div
+                        style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; width: 100%; margin-top: 2rem;">
+                        <div class="stat-box">
+                            <div id="rul-value" class="stat-val">--</div>
+                            <div class="stat-label" style="color: #ccc;">Predicted RUL</div>
+                        </div>
+                        <div class="stat-box">
+                            <div id="rul-status" class="stat-val" style="font-size: 1.5rem; line-height: 3rem;">--</div>
+                            <div class="stat-label" style="color: #ccc;">Condition</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+    <script src="/script.js"></script>
+    <script>
+        // 3D Tilt Logic
+        const jetBg = document.getElementById('jet-bg');
+
+        document.addEventListener('mousemove', (e) => {
+            const xAxis = (window.innerWidth / 2 - e.pageX) / 40;
+            const yAxis = (window.innerHeight / 2 - e.pageY) / 40;
+            jetBg.style.transform = `scale(1.1) rotateY(${xAxis}deg) rotateX(${yAxis}deg) translateZ(5px)`;
+        });
+    </script>
+</body>
+
+</html>

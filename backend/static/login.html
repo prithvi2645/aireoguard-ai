@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - AeroGuard AI</title>
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        body {
+            overflow: hidden;
+            background: #111;
+        }
+
+        .bg-img-wrapper {
+            position: absolute;
+            top: -5%;
+            left: -5%;
+            width: 110%;
+            height: 110%;
+            transition: transform 0.1s ease-out;
+            will-change: transform;
+            z-index: 0;
+        }
+
+        .bg-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        .content-container {
+            position: relative;
+            z-index: 2;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .glass-form {
+            width: 400px;
+        }
+
+        .back-link {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            z-index: 10;
+        }
+
+        .back-link:hover {
+            color: var(--primary-orange);
+        }
+    </style>
+</head>
+
+<body>
+    <a href="/" class="back-link">← Back to Home</a>
+
+    <div class="bg-img-wrapper" id="jet-bg">
+        <img src="/orange_jet.png" alt="Jet Engine">
+    </div>
+    <div class="overlay"></div>
+
+    <div class="content-container">
+        <div class="card glass-form">
+            <h2 style="text-align: center; margin-bottom: 2rem; color: var(--primary-orange);">Access Terminal</h2>
+            <form>
+                <div style="margin-bottom: 1.5rem;">
+                    <label>Operator ID / Email</label>
+                    <input type="text" placeholder="admin@aeroguard.ai" style="width: 100%;">
+                </div>
+                <div style="margin-bottom: 2rem;">
+                    <label>Passkey</label>
+                    <input type="password" placeholder="••••••••" style="width: 100%;">
+                </div>
+                <button type="button" class="btn-orange" style="width: 100%;"
+                    onclick="window.location.href='/dashboard.html'">Authenticate</button>
+            </form>
+            <p style="text-align: center; margin-top: 1rem; font-size: 0.9rem;">
+                <a href="/signup.html" style="color: #ccc; text-decoration: none;">Request Access</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const jetBg = document.getElementById('jet-bg');
+        document.addEventListener('mousemove', (e) => {
+            const xAxis = (window.innerWidth / 2 - e.pageX) / 40;
+            const yAxis = (window.innerHeight / 2 - e.pageY) / 40;
+            jetBg.style.transform = `scale(1.1) rotateY(${xAxis}deg) rotateX(${yAxis}deg) translateZ(10px)`;
+        });
+    </script>
+</body>
+
+</html>

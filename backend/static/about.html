@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - AeroGuard AI</title>
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        body {
+            overflow: hidden;
+            background: #111;
+        }
+
+        .bg-img-wrapper {
+            position: absolute;
+            top: -5%;
+            left: -5%;
+            width: 110%;
+            height: 110%;
+            transition: transform 0.1s ease-out;
+            will-change: transform;
+            z-index: 0;
+        }
+
+        .bg-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1;
+        }
+
+        .content-container {
+            position: relative;
+            z-index: 2;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .glass-panel {
+            width: 800px;
+            max-width: 90%;
+        }
+
+        .back-link {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            z-index: 10;
+        }
+
+        .back-link:hover {
+            color: var(--primary-orange);
+        }
+
+        p {
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            color: #ddd;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="/" class="back-link">← Back to Home</a>
+
+    <div class="bg-img-wrapper" id="jet-bg">
+        <img src="/orange_jet.png" alt="Jet Engine">
+    </div>
+    <div class="overlay"></div>
+
+    <div class="content-container">
+        <div class="card glass-panel">
+            <h1 style="color: var(--primary-orange); margin-bottom: 1.5rem;">Mission Statement</h1>
+            <p><strong>AeroGuard AI</strong> is at the forefront of predictive aviation maintenance. Utilizing advanced
+                machine learning algorithms (XGBoost) trained on NASA's CMAPSS dataset, we predict the Remaining Useful
+                Life (RUL) of turbofan engines with high precision.</p>
+            <p>Our goal is to eliminate unplanned downtime and ensure the safety of millions of passengers worldwide
+                through proactive, data-driven insights.</p>
+            <div style="margin-top: 2rem; display: flex; gap: 2rem;">
+                <div>
+                    <h3 style="color: white;">99.9%</h3>
+                    <span style="color: #888; font-size: 0.8rem;">UPTIME TARGET</span>
+                </div>
+                <div>
+                    <h3 style="color: white;">Real-Time</h3>
+                    <span style="color: #888; font-size: 0.8rem;">TELEMETRY ANALYSIS</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const jetBg = document.getElementById('jet-bg');
+        document.addEventListener('mousemove', (e) => {
+            const xAxis = (window.innerWidth / 2 - e.pageX) / 50;
+            const yAxis = (window.innerHeight / 2 - e.pageY) / 50;
+            jetBg.style.transform = `scale(1.1) rotateY(${xAxis}deg) rotateX(${yAxis}deg) translateZ(10px)`;
+        });
+    </script>
+</body>
+
+</html>

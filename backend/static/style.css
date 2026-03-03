@@ -1,0 +1,284 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+:root {
+    --primary-orange: #ff6600;
+    --dark-gray: #333333;
+    --light-gray: #f5f5f5;
+    --medium-gray: #888888;
+    --white: #ffffff;
+
+    --bg-color: var(--light-gray);
+    --text-primary: var(--dark-gray);
+    --text-secondary: var(--medium-gray);
+    --card-bg: var(--white);
+    --accent: var(--primary-orange);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Landing Page */
+.landing-container {
+    height: 100vh;
+    width: 100vw;
+    background-image: url('/jet_engine.png');
+    /* Fallback */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+/* Ensure image covers screen even if it's an img element */
+.bg-img-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.bg-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* This covers the screen */
+}
+
+.landing-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(51, 51, 51, 0.7);
+    /* Dark gray overlay */
+    z-index: 1;
+}
+
+.landing-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: var(--white);
+}
+
+.landing-content h1 {
+    font-size: 4rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--white);
+    text-transform: uppercase;
+}
+
+.landing-content p {
+    font-size: 1.5rem;
+    margin-bottom: 3rem;
+    color: var(--light-gray);
+}
+
+.btn-orange {
+    padding: 1rem 3rem;
+    background-color: var(--primary-orange);
+    color: var(--white);
+    font-size: 1.2rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.3s ease;
+    text-transform: uppercase;
+}
+
+.btn-orange:hover {
+    background-color: var(--medium-gray);
+    /* Change to Gray on Hover */
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Nav Bar */
+.landing-nav {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 2rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 2rem;
+    z-index: 10;
+}
+
+.nav-link {
+    color: var(--white);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1rem;
+    text-transform: uppercase;
+    transition: color 0.3s;
+}
+
+.nav-link:hover {
+    color: var(--primary-orange);
+}
+
+/* Dashboard */
+.dashboard-container {
+    position: relative;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+    z-index: 2;
+    /* Above Three.js bg */
+}
+
+#bg-animation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+    background: var(--light-gray);
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    background: var(--white);
+    padding: 1.5rem;
+    border-left: 5px solid var(--primary-orange);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+h2 {
+    color: var(--dark-gray);
+    font-size: 1.8rem;
+}
+
+
+/* Glassmorphism Cards - Invisible Glass */
+.card {
+    background: rgba(20, 20, 20, 0.02);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 2rem;
+    border-radius: 4px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    color: var(--white);
+    transition: all 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    border-color: var(--primary-orange);
+    background: rgba(20, 20, 20, 0.6);
+    /* Slightly more opaque on hover */
+}
+
+
+.main-grid {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 2rem;
+}
+
+/* Inputs */
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--medium-gray);
+    font-weight: 500;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--medium-gray);
+    border-radius: 2px;
+    background: var(--light-gray);
+    color: var(--dark-gray);
+    font-family: inherit;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--primary-orange);
+    background: var(--white);
+}
+
+/* Dropdown */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: var(--white);
+    min-width: 250px;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+    z-index: 10;
+    border-top: 3px solid var(--primary-orange);
+    padding: 1rem;
+}
+
+.dropdown-content p {
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.dropdown-content strong {
+    color: var(--primary-orange);
+}
+
+.show {
+    display: block;
+}
+
+/* Stats */
+.stat-box {
+    text-align: center;
+    margin-top: 2rem;
+    padding: 1rem;
+    background: var(--light-gray);
+    border-radius: 4px;
+}
+
+.stat-val {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary-orange);
+}
+
+.stat-label {
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    color: var(--medium-gray);
+    letter-spacing: 1px;
+}
