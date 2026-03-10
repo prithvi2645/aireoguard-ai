@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - AeroGuard AI</title>
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        body {
+            overflow: hidden;
+            background: #111;
+        }
+
+        .bg-img-wrapper {
+            position: absolute;
+            top: -5%;
+            left: -5%;
+            width: 110%;
+            height: 110%;
+            transition: transform 0.1s ease-out;
+            will-change: transform;
+            z-index: 0;
+        }
+
+        .bg-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        .content-container {
+            position: relative;
+            z-index: 2;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .glass-form {
+            width: 400px;
+        }
+
+        .back-link {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            z-index: 10;
+        }
+
+        .back-link:hover {
+            color: var(--primary-orange);
+        }
+
+        .auth-message {
+            text-align: center;
+            margin-top: 1rem;
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .auth-message.error {
+            display: block;
+            background: rgba(255, 60, 60, 0.15);
+            border: 1px solid rgba(255, 60, 60, 0.4);
+            color: #ff6b6b;
+        }
+
+        .auth-message.success {
+            display: block;
+            background: rgba(0, 200, 100, 0.15);
+            border: 1px solid rgba(0, 200, 100, 0.4);
+            color: #4dff91;
+        }
+
+        .btn-orange:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="/" class="back-link">&larr; Back to Home</a>
+
+    <div class="bg-img-wrapper" id="jet-bg">
+        <img src="/orange_jet.png" alt="Jet Engine">
+    </div>
+    <div class="overlay"></div>
+
+    <div class="content-container">
+        <div class="card glass-form">
+            <h2 style="text-align: center; margin-bottom: 2rem; color: var(--primary-orange);">Access Terminal</h2>
+            <form id="login-form">
+                <div style="margin-bottom: 1.5rem;">
+                    <label>Operator ID / Email</label>
+                    <input type="email" id="login-email" placeholder="admin@aeroguard.ai" style="width: 100%;" required>
+                </div>
+                <div style="margin-bottom: 2rem;">
+                    <label>Passkey</label>
+                    <input type="password" id="login-password"
+                        placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;" style="width: 100%;"
+                        required>
+                </div>
+                <button type="submit" id="login-btn" class="btn-orange" style="width: 100%;">Authenticate</button>
+            </form>
+            <div id="auth-message" class="auth-message"></div>
+            <p style="text-align: center; margin-top: 1rem; font-size: 0.9rem;">
+                <a href="/signup.html" style="color: #ccc; text-decoration: none;">Request Access</a>
+            </p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+    <script>
+        // 3D Parallax
+        var jetBg = document.getElementById('jet-bg');
+        document.addEventListener('mousemove', function (e) {
+            var xAxis = (window.innerWidth / 2 - e.pageX) / 40;
+            var yAxis = (window.innerHeight / 2 - e.pageY) / 40;
+            jetBg.style.transform = 'scale(1.1) rotateY(' + xAxis + 'deg) rotateX(' + yAxis + 'deg) translateZ(10px)';
+        });
+
+        // Supabase init
+        var SUPABASE_URL = 'https://ensedxerykbjxnzenabl.supabase.co';
+        var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVuc2VkeGVyeWtianhuemVuYWJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA3NzYzNzIsImV4cCI6MjA4NjM1MjM3Mn0.6g0u3qviXkmhBCfHgwBcVDd2UbvHXYyZKYB5N_QBK1c';
+        var sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Check if already logged in
+        sb.auth.getSession().then(function (res) {
+            if (res.data.session) {
+                window.location.href = '/dashboard.html';
+            }
+        });
+
+        var loginForm = document.getElementById('login-form');
+        var loginBtn = document.getElementById('login-btn');
+        var authMessage = document.getElementById('auth-message');
+
+        function showMessage(text, type) {
+            authMessage.innerHTML = text;
+            authMessage.className = 'auth-message ' + type;
+        }
+
+        loginForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Authenticating...';
+            authMessage.className = 'auth-message';
+
+            var email = document.getElementById('login-email').value.trim();
+            var password = document.getElementById('login-password').value;
+
+            sb.auth.signInWithPassword({
+                email: email,
+                password: password
+            }).then(function (response) {
+                var error = response.error;
+
+                if (error) {
+                    var msg = error.message;
+                    if (msg.toLowerCase().indexOf('email not confirmed') !== -1) {
+                        msg = 'Email not confirmed yet. Please check your inbox and click the verification link first.';
+                    }
+                    showMessage(msg, 'error');
+                    loginBtn.disabled = false;
+                    loginBtn.textContent = 'Authenticate';
+                } else {
+                    showMessage('Access Granted. Redirecting...', 'success');
+                    setTimeout(function () {
+                        window.location.href = '/dashboard.html';
+                    }, 800);
+                }
+            }).catch(function (err) {
+                showMessage('Error: ' + err.message, 'error');
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Authenticate';
+            });
+        });
+    </script>
+</body>
+
+</html>

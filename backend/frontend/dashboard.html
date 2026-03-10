@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="/style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* Dashboard specific overrides for 3D BG */
         body {
             overflow-x: hidden;
             background: #111;
@@ -51,18 +50,72 @@
         .dashboard-container {
             position: relative;
             z-index: 2;
-            /* Content above overlay */
             padding-top: 2rem;
             max-width: 1400px;
             margin: 0 auto;
             padding: 2rem;
         }
+
+        .user-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 102, 0, 0.3);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #ccc;
+        }
+
+        .user-badge .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4dff91;
+            box-shadow: 0 0 6px rgba(77, 255, 145, 0.5);
+        }
+
+        .btn-logout {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #ccc;
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-logout:hover {
+            background: rgba(255, 60, 60, 0.2);
+            border-color: rgba(255, 60, 60, 0.4);
+            color: #ff6b6b;
+        }
+
+        .auth-loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #111;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--primary-orange);
+            font-size: 1.2rem;
+        }
     </style>
 </head>
 
 <body>
-    <div class="dashboard-wrapper">
-        <!-- 3D Background -->
+    <div id="auth-loading" class="auth-loading">
+        <span>Verifying clearance...</span>
+    </div>
+
+    <div class="dashboard-wrapper" style="visibility: hidden;" id="dashboard-main">
         <div class="bg-img-wrapper" id="jet-bg">
             <img src="/orange_jet.png" alt="Jet Engine">
         </div>
@@ -77,6 +130,11 @@
                 </div>
 
                 <div class="header-actions" style="display: flex; gap: 1rem; align-items: center;">
+                    <div class="user-badge">
+                        <span class="dot"></span>
+                        <span id="user-email">operator</span>
+                    </div>
+
                     <button id="demo-btn" class="btn-orange" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Auto
                         Demo</button>
 
@@ -92,11 +150,12 @@
                             <p style="color:#ccc; font-size: 0.9rem;">RUL Thresholds: 60/30</p>
                         </div>
                     </div>
+
+                    <button id="logout-btn" class="btn-logout">Logout</button>
                 </div>
             </header>
 
             <div class="main-grid" style="display: grid; grid-template-columns: 350px 1fr; gap: 2rem;">
-                <!-- Left Column -->
                 <div class="card">
                     <h3 style="margin-bottom: 1.5rem; color: var(--primary-orange);">Sensor Configuration</h3>
                     <form id="prediction-form">
@@ -120,16 +179,13 @@
                             <input type="number" step="0.01" name="s_14" value="8140.00" required
                                 style="width: 100%; padding: 10px; border-radius: 4px;">
                         </div>
-
                         <button type="submit" class="btn-orange" style="width: 100%; margin-top: 1rem;">Run
                             Analysis</button>
                     </form>
                 </div>
 
-                <!-- Right Column -->
                 <div class="card" style="display: flex; flex-direction: column; align-items: center;">
                     <h3 style="margin-bottom: 1rem;">Engine Status</h3>
-
                     <div style="position: relative; height: 250px; width: 250px;">
                         <canvas id="healthGauge"></canvas>
                         <div
@@ -138,7 +194,6 @@
                                 style="font-size: 2.5rem; font-weight: bold; display: block; color: white;">--%</span>
                         </div>
                     </div>
-
                     <div
                         style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; width: 100%; margin-top: 2rem;">
                         <div class="stat-box">
@@ -152,20 +207,45 @@
                     </div>
                 </div>
             </div>
-
-
-
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+    <script>
+        // Supabase init
+        var SUPABASE_URL = 'https://ensedxerykbjxnzenabl.supabase.co';
+        var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVuc2VkeGVyeWtianhuemVuYWJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA3NzYzNzIsImV4cCI6MjA4NjM1MjM3Mn0.6g0u3qviXkmhBCfHgwBcVDd2UbvHXYyZKYB5N_QBK1c';
+        var sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Auth guard
+        sb.auth.getSession().then(function (res) {
+            if (!res.data.session) {
+                window.location.href = '/login.html';
+                return;
+            }
+            document.getElementById('user-email').textContent = res.data.session.user.email;
+            document.getElementById('auth-loading').style.display = 'none';
+            document.getElementById('dashboard-main').style.visibility = 'visible';
+        }).catch(function () {
+            window.location.href = '/login.html';
+        });
+
+        // Logout
+        document.getElementById('logout-btn').addEventListener('click', function () {
+            sb.auth.signOut().then(function () {
+                window.location.href = '/';
+            });
+        });
+    </script>
+
     <script src="/script.js"></script>
     <script>
-        // 3D Tilt Logic
-        const jetBg = document.getElementById('jet-bg');
-
-        document.addEventListener('mousemove', (e) => {
-            const xAxis = (window.innerWidth / 2 - e.pageX) / 40;
-            const yAxis = (window.innerHeight / 2 - e.pageY) / 40;
-            jetBg.style.transform = `scale(1.1) rotateY(${xAxis}deg) rotateX(${yAxis}deg) translateZ(5px)`;
+        var jetBg = document.getElementById('jet-bg');
+        document.addEventListener('mousemove', function (e) {
+            var xAxis = (window.innerWidth / 2 - e.pageX) / 40;
+            var yAxis = (window.innerHeight / 2 - e.pageY) / 40;
+            jetBg.style.transform = 'scale(1.1) rotateY(' + xAxis + 'deg) rotateX(' + yAxis + 'deg) translateZ(5px)';
         });
     </script>
 </body>

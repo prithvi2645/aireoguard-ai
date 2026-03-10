@@ -91,7 +91,4 @@ async def predict(data: SensorData):
     }
 
 # Serve static files (Frontend)
-if not os.path.exists("backend/static"):
-    os.makedirs("backend/static")
-
-app.mount("/", StaticFiles(directory="backend/static", html=True), name="static")
+app.mount("/", StaticFiles(directory="backend/frontend", html=True), name="static")
