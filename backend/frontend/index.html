@@ -4,12 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AeroGuard AI - Initialize</title>
+    <title>AeroGuard AI - Premium Predictive Maintenance</title>
     <link rel="stylesheet" href="/style.css">
     <style>
         body {
-            overflow: hidden;
-            background: #111;
+            overflow-x: hidden;
+            background: #0a0a1a;
+            cursor: none; /* Hide default cursor */
         }
 
         .landing-container {
@@ -42,10 +43,39 @@
             pointer-events: auto;
             backdrop-filter: blur(5px);
         }
+
+        /* Custom Cursor Elements */
+        #custom-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: var(--primary-orange);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s, height 0.2s, background 0.2s;
+            mix-blend-mode: difference;
+        }
+
+        #cursor-glow {
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255, 102, 0, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            will-change: transform;
+        }
     </style>
 </head>
 
 <body>
+    <div id="custom-cursor"></div>
+    <div id="cursor-glow"></div>
+
     <div class="landing-container" id="scene">
         <nav class="landing-nav" id="main-nav">
             <a href="/dashboard.html" class="nav-link" style="color: var(--primary-orange);">Dashboard</a>
@@ -66,27 +96,236 @@
         <div class="landing-overlay"></div>
 
         <div class="landing-content">
-            <h1>AeroGuard AI</h1>
+            <h1 id="typing-title"></h1>
             <p>Predictive Maintenance System</p>
             <a href="/dashboard.html" class="btn-orange">Go to Dashboard</a>
         </div>
+
+        <!-- Scroll Down Indicator -->
+        <div class="scroll-indicator" id="scroll-indicator">
+            <span>Scroll Down</span>
+            <div class="scroll-arrow"></div>
+        </div>
     </div>
+
+    <!-- What is AeroGuard AI (Interactive Glow) -->
+    <section class="section section-about" id="about-section">
+        <div class="about-interactive-bg" id="about-glow-trigger"></div>
+        <div class="section-inner">
+            <h2 class="section-title reveal">What is <span class="text-accent">AeroGuard AI</span>?</h2>
+            <div class="section-divider reveal"></div>
+            <p class="section-text reveal">
+                AeroGuard AI is an advanced <strong>AI-powered predictive maintenance platform</strong> designed
+                specifically for aviation jet engines. By analyzing real-time sensor data from 21 critical engine
+                parameters, our machine learning model predicts the <strong>Remaining Useful Life (RUL)</strong>
+                of engine components — enabling maintenance teams to act <em>before</em> failures happen.
+            </p>
+            <p class="section-text reveal">
+                Built on the NASA C-MAPSS turbofan engine degradation dataset, AeroGuard AI brings
+                cutting-edge deep learning into the hands of aviation engineers and fleet managers.
+            </p>
+        </div>
+    </section>
+
+    <!-- Problem Statement (Stacked Cards) -->
+    <section class="section section-problem" id="problem-section">
+        <div class="section-inner">
+            <h2 class="section-title reveal">The <span class="text-accent">Problem</span></h2>
+            <div class="section-divider reveal"></div>
+            <div class="problem-stack-container">
+                <div class="problem-stack-item reveal-stack" style="--index: 1;">
+                    <div class="problem-card">
+                        <div class="problem-icon">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        </div>
+                        <h3>Unplanned Failures</h3>
+                        <p>Unexpected jet engine failures cost airlines <strong>$3.5 billion annually</strong> in delays,
+                            cancellations, and emergency repairs — putting passengers and crew at risk.</p>
+                    </div>
+                </div>
+                <div class="problem-stack-item reveal-stack" style="--index: 2;">
+                    <div class="problem-card">
+                        <div class="problem-icon">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                        </div>
+                        <h3>Wasteful Scheduled Maintenance</h3>
+                        <p>Traditional time-based maintenance replaces parts that still have useful life, wasting up to
+                            <strong>30% of maintenance budgets</strong> on unnecessary overhauls.</p>
+                    </div>
+                </div>
+                <div class="problem-stack-item reveal-stack" style="--index: 3;">
+                    <div class="problem-card">
+                        <div class="problem-icon">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                        </div>
+                        <h3>No Real-Time Insight</h3>
+                        <p>Current systems lack the ability to process live sensor streams and provide <strong>actionable
+                                predictions</strong> — leaving engineers reactive instead of proactive.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Features (Horizontal Marquee) -->
+    <section class="section section-features" id="features-section">
+        <div class="section-inner">
+            <h2 class="section-title reveal">Key <span class="text-accent">Features</span></h2>
+            <div class="section-divider reveal"></div>
+        </div>
+        <div class="marquee">
+            <div class="marquee-content">
+                <div class="feature-card">
+                    <div class="feature-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/><circle cx="12" cy="12" r="9"/></svg></div>
+                    <h3>Real-Time Analysis</h3>
+                    <p>21 sensor inputs processed instantly for anomalies.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div>
+                    <h3>RUL Prediction</h3>
+                    <p>Deep learning predicts precise maintenance windows.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17l-6-8-4 4-5-5"/></svg></div>
+                    <h3>Health Score</h3>
+                    <p>Visual gauges for engine health percentage.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"/><path d="M12 18v4"/><path d="M4.93 4.93l2.83 2.83"/><path d="M16.24 16.24l2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="M4.93 19.07l2.83-2.83"/><path d="M16.24 7.76l2.83-2.83"/></svg></div>
+                    <h3>AI Insights</h3>
+                    <p>Deep learning on NASA C-MAPSS data drives results.</p>
+                </div>
+                <!-- Duplicate for seamless loop -->
+                <div class="feature-card">
+                    <div class="feature-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/><circle cx="12" cy="12" r="9"/></svg></div>
+                    <h3>Real-Time Analysis</h3>
+                    <p>21 sensor inputs processed instantly for anomalies.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div>
+                    <h3>RUL Prediction</h3>
+                    <p>Deep learning predicts precise maintenance windows.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17l-6-8-4 4-5-5"/></svg></div>
+                    <h3>Health Score</h3>
+                    <p>Visual gauges for engine health percentage.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"/><path d="M12 18v4"/><path d="M4.93 4.93l2.83 2.83"/><path d="M16.24 16.24l2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="M4.93 19.07l2.83-2.83"/><path d="M16.24 7.76l2.83-2.83"/></svg></div>
+                    <h3>AI Insights</h3>
+                    <p>Deep learning on NASA C-MAPSS data drives results.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works (Circular Circular Flow) -->
+    <section class="section section-how" id="how-section">
+        <div class="how-works-bg-stream"></div>
+        <div class="section-inner">
+            <h2 class="section-title reveal">How It <span class="text-accent">Works</span></h2>
+            <div class="section-divider reveal"></div>
+            
+            <div class="engine-circle-container reveal">
+                <div class="engine-core">
+                    <svg viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,102,0,0.1)" stroke-width="1" />
+                        <path id="fan-path" d="M50 50 L50 10 A40 40 0 0 1 90 50 Z" fill="rgba(255,102,0,0.2)" />
+                    </svg>
+                </div>
+                <div class="how-step-node" style="--angle: 0deg;">
+                    <div class="node-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+                    <div class="node-content">
+                        <h4>01. Input</h4>
+                        <p>Sensor Data Upload</p>
+                    </div>
+                </div>
+                <div class="how-step-node" style="--angle: 120deg;">
+                    <div class="node-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+                    <div class="node-content">
+                        <h4>02. Process</h4>
+                        <p>AI Engine Analysis</p>
+                    </div>
+                </div>
+                <div class="how-step-node" style="--angle: 240deg;">
+                    <div class="node-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+                    <div class="node-content">
+                        <h4>03. Result</h4>
+                        <p>Health & RUL Insight</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="section section-cta" id="cta-section">
+        <div class="section-inner">
+            <h2 class="section-title reveal">Ready to <span class="text-accent">Get Started</span>?</h2>
+            <p class="section-text cta-text reveal">Experience the future of predictive aviation maintenance.</p>
+            <a href="/dashboard.html" class="btn-orange btn-cta reveal">Launch Dashboard</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <span class="footer-logo">AeroGuard AI</span>
+                <p>Intelligent Predictive Maintenance for Aviation</p>
+            </div>
+            <div class="footer-links">
+                <a href="/dashboard.html">Dashboard</a>
+                <a href="/about.html">About</a>
+                <a href="/contact.html">Contact</a>
+            </div>
+            <div class="footer-copy">
+                <p>&copy; 2026 AeroGuard AI. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
     <script>
-        // 3D Parallax
-        var container = document.getElementById('scene');
-        var jet = document.getElementById('jet-image');
+        // Custom Cursor Logic
+        const cursor = document.getElementById('custom-cursor');
+        const glow = document.getElementById('cursor-glow');
 
-        document.addEventListener('mousemove', function (e) {
-            var xAxis = (window.innerWidth / 2 - e.pageX) / 30;
-            var yAxis = (window.innerHeight / 2 - e.pageY) / 30;
-            jet.style.transform = 'scale(1.1) rotateY(' + xAxis + 'deg) rotateX(' + yAxis + 'deg) translateZ(10px)';
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            
+            // Glow follows with slight lag
+            glow.animate({
+                left: e.clientX + 'px',
+                top: e.clientY + 'px'
+            }, { duration: 500, fill: "forwards" });
         });
 
-        document.addEventListener('mouseleave', function () {
-            jet.style.transform = 'scale(1.1) rotateY(0deg) rotateX(0deg) translateZ(0px)';
+        // Cursor state on links
+        document.querySelectorAll('a, button, .nav-link').forEach(elem => {
+            elem.addEventListener('mouseenter', () => {
+                cursor.style.width = '50px';
+                cursor.style.height = '50px';
+                cursor.style.background = 'transparent';
+                cursor.style.border = '2px solid var(--primary-orange)';
+            });
+            elem.addEventListener('mouseleave', () => {
+                cursor.style.width = '20px';
+                cursor.style.height = '20px';
+                cursor.style.background = 'var(--primary-orange)';
+                cursor.style.border = 'none';
+            });
+        });
+
+        // 3D Parallax
+        var jet = document.getElementById('jet-image');
+        document.addEventListener('mousemove', function (e) {
+            var xAxis = (window.innerWidth / 2 - e.pageX) / 40;
+            var yAxis = (window.innerHeight / 2 - e.pageY) / 40;
+            jet.style.transform = 'scale(1.1) rotateY(' + xAxis + 'deg) rotateX(' + yAxis + 'deg)';
         });
 
         // Supabase init
@@ -109,6 +348,101 @@
             sb.auth.signOut().then(function () {
                 window.location.reload();
             });
+        });
+
+        // --- Typing Animation (Infinite Loop) ---
+        (function () {
+            var title = document.getElementById('typing-title');
+            var text = 'AeroGuard AI';
+            var i = 0;
+            var isDeleting = false;
+            title.textContent = '';
+
+            function tick() {
+                if (!isDeleting) {
+                    // Typing forward
+                    title.textContent = text.substring(0, i + 1);
+                    i++;
+                    if (i >= text.length) {
+                        // Pause before deleting
+                        isDeleting = true;
+                        setTimeout(tick, 1800);
+                        return;
+                    }
+                    setTimeout(tick, 120);
+                } else {
+                    // Deleting backward
+                    title.textContent = text.substring(0, i - 1);
+                    i--;
+                    if (i <= 0) {
+                        // Pause before retyping
+                        isDeleting = false;
+                        setTimeout(tick, 600);
+                        return;
+                    }
+                    setTimeout(tick, 60);
+                }
+            }
+            setTimeout(tick, 500);
+        })();
+
+        // --- Scroll Reveal ---
+        (function () {
+            const reveals = document.querySelectorAll('.reveal');
+            const stackItems = document.querySelectorAll('.reveal-stack');
+
+            function checkReveal() {
+                // Standard Reveal
+                reveals.forEach(el => {
+                    const top = el.getBoundingClientRect().top;
+                    if (top < window.innerHeight - 80) {
+                        el.classList.add('revealed');
+                    }
+                });
+
+                // Stack Reveal (Sticky cards)
+                stackItems.forEach(el => {
+                    const top = el.getBoundingClientRect().top;
+                    if (top < window.innerHeight * 0.4) {
+                        el.classList.add('revealed');
+                    } else {
+                        el.classList.remove('revealed');
+                    }
+                });
+            }
+            window.addEventListener('scroll', checkReveal);
+            checkReveal();
+        })();
+
+        // --- Problem Cards 3D Tilt ---
+        document.querySelectorAll('.problem-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = (centerY - y) / 10;
+                const rotateY = (x - centerX) / 10;
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
+            });
+        });
+
+        // --- Scroll indicator hide on scroll ---
+        window.addEventListener('scroll', function () {
+            var indicator = document.getElementById('scroll-indicator');
+            if (window.scrollY > 100) {
+                indicator.style.opacity = '0';
+            } else {
+                indicator.style.opacity = '1';
+            }
         });
     </script>
 </body>
